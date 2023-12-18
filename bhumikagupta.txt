@@ -1,0 +1,223 @@
+Assignment 1
+nginx-deployment.yaml 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+
+
+
+
+ 
+Assignment 2
+nginx-deployment.yaml 
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+ 
+Assignment 3
+
+nginx-service.yaml 
+
+Nginx service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
+
+
+Assignment -4
+nginx-deployment.yaml 
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nginx-config-volume
+          mountPath: /etc/nginx/conf.d
+      volumes:
+      - name: nginx-config-volume
+        configMap:
+         name: nginx-config
+
+
+config.yaml
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  nginx.conf: |
+    server {
+      listen 80;
+      server_name example.com;
+      location / {
+        root /usr/share/nginx/html;
+        index index.html;
+      }
+    }
+
+ 
+Assignment -5
+
+Dockerfile 
+
+FROM wordpress:latest
+
+ENV WORDPRESS_DB_HOST=mysql
+ENV WORDPRESS_DB_USER=root
+ENV WORDPRESS_DB_PASSWORD=rootpassword
+ENV WORDPRESS_DB_NAME=mydatabase
+
+EXPOSE 80
+
+CMD ["apache2-foreground"]
+
+Docker-Compose.yaml
+version: '3'
+
+services:
+  wordpress:
+    build: .
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    links:
+      - mysql
+
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydatabase
+ 
+Assignment -6
+provider "aws" {
+  region = "ap-south-1"
+}
+
+resource "aws_instance" "example_instance" {
+  ami           = ""  
+  instance_type = ""               
+
+  tags = {
+    Name = "ExampleInstance"
+  }
+}
+
+resource "aws_security_group" "example_security_group" {
+  name        = "example-security-group"
+  description = "Allow incoming SSH traffic on port 23"
+
+  ingress {
+    from_port = 23
+    to_port   = 23
+    protocol  = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  
+  }
+
+  egress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "ExampleSecurityGroup"
+  }
+}
+
+resource "aws_instance" "example_instance" {
+  ami           = ""  
+  instance_type = "t2.micro"               
+
+  vpc_security_group_ids = [aws_security_group.example_security_group.id]
+
+  tags = {
+    Name = "ExampleInstance"
+  }
+}
+ 
+Assignment – 7
+provider "aws" {
+  region = "ap-south-1"
+}
+
+resource "aws_db_instance" "example_rds_instance" {
+  identifier            = "example-rds-instance"
+  engine                = "mysql"
+  instance_class        = "db.t2.micro"
+  allocated_storage     = 20
+  storage_type          = "gp2"
+  username              = ""
+  password              = ""
+  publicly_accessible   = false  
+  multi_az              = false
+  skip_final_snapshot   = true   instance
+
+  vpc_security_group_ids = [""]  
+
+  tags = {
+    Name = "ExampleRDSInstance"
+  }
+}
+
